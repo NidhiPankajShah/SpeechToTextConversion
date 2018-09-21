@@ -1,0 +1,72 @@
+<html>
+<head>
+<title>Speech to text</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style type="text/css">
+#result{
+border: 1px solid #ccc;
+box-shadow: 0px 0px 10px 0px #bbb;
+height:200px;
+}
+button{
+font-size:20px;
+position: absolute;
+top:250px;
+left: 50%;
+
+}
+
+</style>
+<script type="text/javascript">
+
+function startConverting()
+{
+var r = document.getElementById('result');
+if('webkitSpeechRecognition' in window)
+{
+
+var speechRecognition = new webkitSpeechRecognition;
+speechRecognition.continuous = true; 
+speechRecognition.interimResults = true;
+speechRecognition.lang = 'en-IN';
+speechRecognition.start();
+
+var finalTranscripts = '';
+var interimTranscripts = '';
+speechRecognition.onresult = function(event)
+{
+
+for(var i=event.resultIndex; i<event.results.length; i++)
+{
+var transcript = event.results[i][0].transcript;
+transcript.replace("\n", "<br>")
+if(event.results[i].isFinal)
+{
+ finalTranscripts += transcript;
+}
+else{
+interimTranscripts += transcript;
+}
+}
+r.innerHTML = finalTranscripts  + '<span style="color:#999">' + interimTranscripts + '</span>';
+};
+
+
+speechRecognition.onerror = function(event)
+{}
+
+}
+else
+{
+r.innerHTML ='Your browser does not support'
+}
+}
+</script>
+</head>
+
+<body>
+<h4 >Speech to text converter</h4>
+<div id="result"></div>
+<button onclick="startConverting();" align="center"><i class="fa fa-microphone"></i></button>
+</body>
+</html>
